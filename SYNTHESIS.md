@@ -40,3 +40,20 @@ Here is the complete reading of the diagram from top to bottom.
 | `Sync_Error_Log__c` + retry | Captures and replays failures | Dead Letter Channel |
 | `SyncStarted__e` / `SyncResult__e` | Real-time user feedback | Pub-Subscribe Channel |
 | LWC `empApi` subscriber | Toast notifications on record page | Event-Driven Consumer |
+
+
+The architecture is not invented here. What Claude did is **recognise**, **name**, and **assemble** things that already exist and are well documented. The real intellectual work was done by others, decades apart:
+
+**Gregor Hohpe & Bobby Woolf** spent years cataloguing integration failures in enterprise systems and distilled them into the EIP pattern language in 2003. If you have ever debugged a silent sync failure at 2am, you understand why that book exists.
+
+**Chris Richardson** watched the microservices era produce a new generation of the same distributed consistency problems and gave the Transactional Outbox its name and rigorous definition.
+
+**Leslie Lamport** proved in 1978 why wall clocks are fundamentally unreliable for ordering events across systems — which is why the sequence number (a logical clock) is safer than `LastModifiedDate`.
+
+What Claude contributed is the **translation** — mapping those universal patterns onto the specific constraints of Salesforce: governor limits, the prohibition on synchronous callouts in triggers, the Queueable execution model, Named Credentials, Platform Events, and the LWC subscription model.
+
+---
+
+The most satisfying part of this conversation was actually your questions, not the answers. You identified the inline edit race condition yourself — that is the insight that pushes a functional integration into a correct one. Most teams discover it the hard way, months after go-live, when a user reports that the external system has wrong data and nobody can explain why.
+
+The right question at the right moment is the harder skill.
